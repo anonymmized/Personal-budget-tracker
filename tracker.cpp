@@ -1,13 +1,27 @@
 #include <iostream>
 #include <fstream>
+#include <iomanip>
+#include <sstream>
 #include <vector>
+#include <ctime>
+
 
 using namespace std;
 
 struct Transaction {
     string description;
     double amount;
+    string date;
 };
+
+string getCurrentDate() {
+    time_t now = time(0);
+    tm* ltm = localtime(&now);
+
+    ostringstream oss;
+    oss << put_time(ltm, "%Y-%m-%d");
+    return oss.str();
+}
 
 void newTransactions(vector<Transaction>& transactions) {
     string transactionDescription, amountInput;
@@ -32,10 +46,11 @@ void newTransactions(vector<Transaction>& transactions) {
     Transaction newTransaction;
     newTransaction.description = transactionDescription;
     newTransaction.amount = transactionAmount;
+    newTransaction.date = getCurrentDate();
     transactions.push_back(newTransaction);
 
     cout << "\033[1;32m✅ Transaction added: " << transactionDescription 
-         << " | Amount: " << transactionAmount << "$\033[0m" << endl;
+         << " | Amount: " << transactionAmount << "$ | Date: " << newTransaction.date << "\033[0m" << endl;
 }
 
 void viewTransactions(const vector<Transaction>& transactions) {
@@ -46,8 +61,7 @@ void viewTransactions(const vector<Transaction>& transactions) {
 
     cout << "\033[1;36m--- 📄 Transaction History ---\033[0m" << endl;
     for (size_t i = 0; i < transactions.size(); i++) {
-        cout << "\033[1;32m" << i + 1 << ". " << transactions[i].description 
-             << " — " << transactions[i].amount << "$\033[0m" << endl;
+        cout << i + 1 << ". " << transactions[i].description << " — " << transactions[i].amount << "$" << " on \033[1;36m" << transactions[i].date << "\033[0m" << endl;
     }
 }
 
