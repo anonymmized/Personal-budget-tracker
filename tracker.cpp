@@ -12,6 +12,7 @@ struct Transaction {
     string description;
     double amount;
     string date;
+    string category;
 };
 
 string getCurrentDate() {
@@ -24,7 +25,7 @@ string getCurrentDate() {
 }
 
 void newTransactions(vector<Transaction>& transactions) {
-    string transactionDescription, amountInput;
+    string transactionDescription, amountInput, transactionCategory;
     double transactionAmount;
 
     cout << "\033[1;33m📝 Enter transaction description: \033[0m";
@@ -43,14 +44,21 @@ void newTransactions(vector<Transaction>& transactions) {
         return;
     }
 
+    cout << "\033[1;33mEnter transaction category (e.g., clothes, salary): \033[0m";
+    getline(cin, transactionCategory);
+    if (transactionCategory.empty()) {
+        transactionCategory = "Unknown";
+    }
+
     Transaction newTransaction;
     newTransaction.description = transactionDescription;
     newTransaction.amount = transactionAmount;
     newTransaction.date = getCurrentDate();
+    newTransaction.category = transactionCategory;
     transactions.push_back(newTransaction);
 
     cout << "\033[1;32m✅ Transaction added: " << transactionDescription 
-         << " | Amount: " << transactionAmount << "$ | Date: " << newTransaction.date << "\033[0m" << endl;
+         << " | Amount: " << transactionAmount << "$ | Category: " << transactionCategory << " | Date: " << newTransaction.date << "\033[0m" << endl;
 }
 
 void viewTransactions(const vector<Transaction>& transactions) {
@@ -61,7 +69,7 @@ void viewTransactions(const vector<Transaction>& transactions) {
 
     cout << "\033[1;36m--- 📄 Transaction History ---\033[0m" << endl;
     for (size_t i = 0; i < transactions.size(); i++) {
-        cout << i + 1 << ". " << transactions[i].description << " — " << transactions[i].amount << "$" << " on \033[1;36m" << transactions[i].date << "\033[0m" << endl;
+        cout << i + 1 << ". \033[1;36m" << transactions[i].description << " — " << transactions[i].amount << "$ " << "[ " << transactions[i].category << " ]" <<  " on " << transactions[i].date << "\033[0m" << endl;
     }
 }
 
